@@ -1,0 +1,65 @@
+//code
+#include <iostream>
+#include <cstring>
+
+int main()
+{
+    const char invalidSymbols[] = {'=', '-', ',', '@', ';', '#', '%', '+', '^', '!', '{', '[', ']', '}'};
+
+    std::cout << "Enter the number of 3 instructions code: ";
+    int n;
+    std::cin >> n;
+
+    std::cout << "\nTo abort, press any of the following symbols as LHS: =, @, #, $, %, +, -\n";
+
+    char lhs[100][10];
+    char rhs[100][10];
+
+    for (int i = 0; i < n; i++)
+    {
+        std::cout << "\n\nEnter instruction number " << i + 1 << " (LHS followed by RHS):\n";
+        for (int j = 0; j < 2; j++)
+        {
+            lhs[i][j] = std::cin.get();
+            for (int l = 0; l < sizeof(invalidSymbols); l++)
+            {
+                if (lhs[i][j] == invalidSymbols[l])
+                {
+                    std::cout << "\n\n\t\tYou entered an invalid input (Aborting...)";
+                    return 1;
+                }
+            }
+        }
+        std::cin.ignore(); // to ignore new line
+        std::cin.getline(rhs[i], 10);
+    }
+
+    std::cout << "\nOptimal Code optimization for the entered code:\n";
+
+    // Implementation copy propagation
+    for (int i = 0; i < n; i++)
+    {
+        int count = 0;
+        for (int p = i + 1; p < n; p++)
+        {
+            count = 0;
+            for (int k = 0; rhs[i][k] != '\0'; k++)
+            {
+                if (rhs[i][k] == rhs[p][k])
+                {
+                    count++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            if (count == strlen(rhs[p]))
+            {
+                std::cout << "\nCopy Propagation found between instructions " << i + 1 << " and " << p + 1 << "\n";
+            }
+        }
+    }
+
+    return 0;
+}
